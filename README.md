@@ -10,7 +10,7 @@ Requires jQuery >= 2.
 
 ## Usage
 
-`particleui.login(email, password)` must be called at some point to acquire an authorization token and begin updating widgets based on device connection status. All widget elements should have the `particleui` class. After that, they can have any of the following additional classes and attribute combinations listed below. Any elements with the `particleui` class  existing at the time of `$(document).ready()` will be converted to `particleui` widgets. The jQuery function `particleui` can be applied to any jQuery elements.
+`particleui.login(email, password)` must be called at some point to acquire an authorization token and begin updating widgets based on device connection status. If the logged in user only has one claimed device, it will automatically be selected. All widget elements should have the `particleui` class. After that, they can have any of the following additional classes and attribute combinations listed below. Any elements with the `particleui` class  existing at the time of `$(document).ready()` will be converted to `particleui` widgets. The jQuery function `particleui` can be applied to any jQuery elements.
 
 ### class `particleui-variable`
 
@@ -75,7 +75,7 @@ The following static functions have been provided for fine grained control over 
 
 ### `particleui.login(email, password)`
 
-Login to the Particle.io cloud with the specified e-mail address and password. If login is successful, the authorization token of this user will be used for other cloud functions in the library and `particleui` will start monitoring device status and enabling or disabling widgets. Returns a `Promise`.
+Login to the Particle.io cloud with the specified e-mail address and password. If login is successful, the authorization token of this user will be used for other cloud functions in the library and `particleui` will start monitoring device status and enabling or disabling widgets. If the logged in user only has one claimed device, it will automatically be selected. Returns a `Promise`.
 
 ### `particle.logout()`
 

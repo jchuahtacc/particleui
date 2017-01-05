@@ -128,6 +128,9 @@ particleui.login = function(email, password) {
                             //that.devices[result.body[key].id] = result.body[key];
                             that.getDevice(result.body[key].id);
                         }
+                        if (result.body.length == 1) {
+                            that.selectDeviceId(result.body[0].id);
+                        }
                     },
                     function(error) {
                     }
