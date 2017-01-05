@@ -68,3 +68,39 @@ Example:
 ```
 <button class="particleui particleui-device" particleui-deviceid="0123456789">Click to select device ID 0123456789</button>
 ```
+
+## Functions
+
+The following static functions have been provided for fine grained control over widgets.
+
+### `particleui.login(email, password)`
+
+Login to the Particle.io cloud with the specified e-mail address and password. If login is successful, the authorization token of this user will be used for other cloud functions in the library and `particleui` will start monitoring device status and enabling or disabling widgets. Returns a `Promise`.
+
+### `particle.logout()`
+
+Discards authorization tokens, cached devices and ends automatic updating of widgets.
+
+### `particleui.selectDeviceId(deviceId)`
+
+Selects a default device ID that is used for any widget that does not have the `particleui-deviceid` attribute set. Triggers an update of all widgets.
+
+### `particleui.getDevice(deviceId)`
+
+Uses the current authorization token to retrieve device status and caches any results in `particleui.devices`. Returns a `Promise`.
+
+### `particleui.getEventStream(name = null, deviceId = null)`
+
+Returns a `Promise` that resolves to an `EventStream` for the specified event name and device ID.
+
+### `particleui.getVariable(name, deviceId = null)`
+
+Returns a `Promise` that resolves to a variable request for the specified variable name. If `deviceId` is null, the currently selected device ID from `particleui.selectDeviceId` will be used.
+
+### `particleui.callFunction(name, argument = null, deviceId = null)`
+
+Returns a `Promise` that resolves a function call to the specified `name`. Optionally accepts function `argument` and a specific `deviceId`. If no `deviceId` is specified, the currently selected device ID from `particleui.selectDeviceId` will be used
+
+### `particleui.publishEvent(name, data = null, isPrivate = true)`
+
+Returns a `Promise` that resolves an event publish call with the specified `name`. Optionally accepts event `data` and `isPrivate`.
