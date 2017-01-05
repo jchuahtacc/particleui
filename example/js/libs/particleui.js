@@ -12,10 +12,12 @@ particleui._events = null;
 
 particleui.selectDeviceId = function(deviceId) {
     particleui._deviceId = deviceId;
+    var that = this;
     if (particleui._deviceId != null) {
         particleui._particle.getDevice({ deviceId: deviceId, auth: this._token }).then(
             function(data) {
-                particle._connections[deviceId] = data.body.connected;
+                that._connections[deviceId] = data.body.connected;
+                console.log("Current connections", that._connections);
             },
             function(error) {
             }
@@ -68,6 +70,15 @@ particleui.login = function(email, password) {
                         });
                     }
                 );
+                that._particle.listDevices({ auth: that._token }).then(
+                    function(result) {
+                        for (key in result.body) {
+                            that._connections[result.body[key].id] = result.body[key].connected;
+                        }
+                    },
+                    function(error) {
+                    }
+                );
                 resolve(data);
             },
             function(error) {
@@ -109,18 +120,24 @@ particleui.publishEvent = function(name, data, isPrivate) {
     return this._particle["publishEvent"]({ name : name, data : data, isPrivate : isPrivate, auth: this._token});
 };
 
+particleui._fillText = function(element, text) {
+    var $that = $(element);
+    if ($that.is("input") || $that.is("textarea")) {
+        $that.val(text);
+    } else {
+        $that.html(text);
+    }
+}
+
 particleui._enable = function(element) {
     var $that = $(element);
     if ($that.hasClass("particleui-variable")) {
         particleui.getVariable(name, deviceId).then(
             function(result) {
-                if ($that.is("input") || $that.is("textarea")) {
-                    $that.val(result.body.result);
-                } else {
-                    $that.html(result.body.result);
-                }
+                particleui._fillText($that, result.body.result); 
             },
             function(error) {
+                particleui._fillText($that, "");
             }
         );
     } else if ($that.hasClass("particleui-device")) {
@@ -136,11 +153,7 @@ particleui._disable = function(element) {
     var $that = $(element);
     if ($that.hasClass("particleui-variable")) {
         $that.attr('disabled', 'disabled');
-        if ($that.is("input") || $that.is("teextarea")) {
-            $that.val("");
-        } else {
-            $that.html("");
-        }
+        particleui._fillText($that, "");
     } else if ($that.hasClass("particleui-device")) {
         $that.attr('disabled', 'disabled');
     } else if ($that.hasClass("particleui-function")) {
@@ -190,7 +203,7 @@ particleui._click = function(element) {
             isPrivate = isPrivate !== "false";
         }
         if ($element.hasClass("particleui-function")) {
-            particleui.callFunction(name, argument, deviceId);
+            particleui.callFunction(name, data, deviceId);
         } else if ($element.hasClass("particleui-publish")) {
             particleui.publishEvent(name, data, isPrivate);
         } else if ($element.hasClass("particleui-device")) {

@@ -38,6 +38,55 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-md-3">
+                    <div class="panel">
+                        <div class="panel-header">
+                            <h4>Variables</h4>
+                        </div>
+                        <div class="panel-body">
+                            <p>
+                                Variable var1: <span class="particleui particleui-variable" particleui-name="var1"></span>
+                            </p>
+                            <p>
+                                Variable var1 belonging to deviceId 0123456789: <span class="particleui particleui-variable" particleui-name="var1" particleui-deviceid="0123456789"></span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="panel">
+                        <div class="panel-header">
+                            <h4>Functions</h4>
+                        </div>
+                        <div class="panel-body">
+                            <p>
+                                <button type="button" class="btn btn-primary particleui particleui-function" particleui-name="fun1">Run fun1()</button>
+                            </p>
+                            <p>
+                                <button type="button" class="btn btn-primary particleui particleui-function" particleui-name="fun1" particleui-data="hello">Run fun1("hello")</button>
+                            </p>
+                            <p>
+                                <button type="button" class="btn btn-primary particleui particleui-function" particleui-name="fun1" particleui-data="hello" particleui-deviceid="0123456789">Run fun1("hello") on deviceId 0123456789</button>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="panel-header">
+                        <h4>Publish Events</h4>
+                    </div>
+                    <div class="panel-body">
+                        <p>
+                            <button type="button" class="btn btn-primary particleui particleui-publish" particleui-name="event1">Publish "event1"</button>
+                        </p>
+                        <p>
+                            <button type="button" class="btn btn-primary particleui particleui-publish" particleui-name="event1" particleui-data="eventdata">Publish "event1" with data "eventdata"</button>
+                        </p>
+                        <p>
+                            <button type="button" class="btn btn-primary particleui particleui-publish" particleui-name="event1" particleui-isprivate="false">Publish "event1" publicly</button>
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="modal fade" id="loginModal">
