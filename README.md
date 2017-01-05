@@ -62,3 +62,9 @@ Makes this widget clickable. Upon click, it will set the default device ID for a
 
 Attributes:
 - `particleui-deviceid`: the device ID to set
+
+Example:
+
+```
+<button class="particleui particleui-device" particleui-deviceid="0123456789">Click to select device ID 0123456789</button>
+```
