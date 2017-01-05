@@ -1,3 +1,19 @@
+var updating = false;
+
+function update() {
+    // Check if an update is currently running
+    if (!updating) {
+        // Flag that an update is taking place
+        updating = true;
+        // Start refreshing variables, then flag the udpate as finished
+        particleui.refresh(".particleui-variable").then(
+            function(result) {
+                updating = false;
+            }
+        );
+    }
+}
+
 function deviceClick() {
     // When any device is clicked, make them all inactive
     $("#deviceList li").removeClass("active");
@@ -10,6 +26,9 @@ function doLogin() {
     // Hide the login splash screen, show the device screen
     $("#loginSplash").addClass("hidden");
     $("#devicePage").removeClass("hidden");
+
+    // Attempt a refresh of variables every 10 seconds
+    setInterval(update, 10000);
 
     // Get a list of devices, then handle success or failure
     particleui.listDevices().then(
@@ -62,6 +81,9 @@ function doLogin() {
 function doLogout() {
     // Log out from Particle.io cloud
     particleui.logout();
+
+    // Clear variable updating
+    setInterval(null);
 
     // Show the login splash screen, remove the device screen
     $("#loginSplash").removeClass("hidden");

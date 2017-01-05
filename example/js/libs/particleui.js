@@ -238,32 +238,40 @@ particleui._fillText = function(element, text) {
 }
 
 particleui._enable = function(element) {
-    var $that = $(element);
-    var deviceId = $(element).attr('particleui-deviceid');
-    var name = $(element).attr('particleui-name');
-    if (!deviceId || !deviceId.length) {
-        deviceId = particleui._deviceid;
-    }
-    if ($that.hasClass("particleui-variable")) {
-        particleui.getVariable(name, deviceId).then(
-            function(result) {
-                if (result.body.result) {
-                    particleui._fillText($that, result.body.result); 
-                } else {
+    var promise = new Promise(function(resolve, reject) {
+        var $that = $(element);
+        var deviceId = $(element).attr('particleui-deviceid');
+        var name = $(element).attr('particleui-name');
+        if (!deviceId || !deviceId.length) {
+            deviceId = particleui._deviceid;
+        }
+        if ($that.hasClass("particleui-variable")) {
+            particleui.getVariable(name, deviceId).then(
+                function(result) {
+                    if (result.body.result) {
+                        particleui._fillText($that, result.body.result); 
+                    } else {
+                        particleui._fillText($that, "---");
+                    }
+                    resolve(null);
+                },
+                function(error) {
                     particleui._fillText($that, "---");
+                    resolve(null);
                 }
-            },
-            function(error) {
-                particleui._fillText($that, "---");
-            }
-        );
-    } else if ($that.hasClass("particleui-device")) {
-        $that.attr('disabled', false)
-    } else if ($that.hasClass("particleui-function")) {
-        $that.attr('disabled', false);
-    } else if ($that.hasClass("particleui-publish")) {
-        $that.attr('disabled', false);
-    }
+            );
+        } else if ($that.hasClass("particleui-device")) {
+            $that.attr('disabled', false)
+            resolve(null);
+        } else if ($that.hasClass("particleui-function")) {
+            $that.attr('disabled', false);
+            resolve(null)
+        } else if ($that.hasClass("particleui-publish")) {
+            $that.attr('disabled', false);
+            resolve(null)
+        }
+    });
+    return promise;
 }
 
 particleui._disable = function(element) {
@@ -287,37 +295,48 @@ particleui._disable = function(element) {
  * @param {String} selector     A DOM selector of elements to refresh
  */
 particleui.refresh = function(selector) {
-    if (selector) {
-        $selector = $(selector);
-        console.log("count", $selector);
-        $selector.each(function() {
-            var name = $(this).attr('particleui-name');
-            var deviceId = $(this).attr('particleui-deviceid');
-            if (!deviceId || !deviceId.length) {
-                deviceId = null;
+    var promise = new Promise(function(resolve, reject) {
+        if (selector) {
+            $selector = $(selector);
+            var count = $selector.length;
+            var decrementCounter = function() {
+                count--;
+                if (count <= 0) {
+                    resolve(null);
+                }
             }
-            if (name && name.length) {
-                var $that = $(this);
-                if (deviceId) {
-                    if (particleui.devices[deviceId] && particleui.devices[deviceId].connected) {
-                        particleui._enable($that);
-                    } else {
-                        particleui._disable($that);
-                    }
-                } else {
-                    if ($that.hasClass("particleui-publish")) {
-                        particleui._enable($that);
-                    } else {
-                        if (particleui._deviceId && particleui.devices[particleui._deviceId] && particleui.devices[particleui._deviceId].connected) {
-                            particleui._enable($that);
+            $selector.each(function() {
+                var name = $(this).attr('particleui-name');
+                var deviceId = $(this).attr('particleui-deviceid');
+                if (!deviceId || !deviceId.length) {
+                    deviceId = null;
+                }
+                if (name && name.length) {
+                    var $that = $(this);
+                    if (deviceId) {
+                        if (particleui.devices[deviceId] && particleui.devices[deviceId].connected) {
+                            particleui._enable($that).then(function(result) { decrementCounter() });
                         } else {
                             particleui._disable($that);
+                            decrementCounter();
+                        }
+                    } else {
+                        if ($that.hasClass("particleui-publish")) {
+                            particleui._enable($that).then(function(result) { decrementCounter() });
+                        } else {
+                            if (particleui._deviceId && particleui.devices[particleui._deviceId] && particleui.devices[particleui._deviceId].connected) {
+                                particleui._enable($that).then(function(result) { decrementCounter() });
+                            } else {
+                                particleui._disable($that);
+                                decrementCounter();
+                            }
                         }
                     }
                 }
-            }
-        });
-    }
+            });
+        }
+    });
+    return promise;
 };
 
 particleui._click = function(element) {
