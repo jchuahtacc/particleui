@@ -10,6 +10,11 @@ particleui._connections = { };
 
 particleui._events = null;
 
+/**
+ * Select the default deviceId for widgets that have no particleui-deviceid attribute
+ * @param {String} deviceId     deviceId to set
+ * @return null
+ */
 particleui.selectDeviceId = function(deviceId) {
     particleui._deviceId = deviceId;
     var that = this;
@@ -17,15 +22,25 @@ particleui.selectDeviceId = function(deviceId) {
         particleui._particle.getDevice({ deviceId: deviceId, auth: this._token }).then(
             function(data) {
                 that._connections[deviceId] = data.body.connected;
-                console.log("Current connections", that._connections);
+                particleui.refresh("[particleui-deviceid='" + deviceId + "']");
+                particleui.refresh("[particleui-deviceid='']");
             },
             function(error) {
+                that._connections[deviceId] = false;
+                particleui.refresh("[particleui-deviceid='" + deviceId + "']");
+                particleui.refresh("[particleui-deviceid='']");
             }
         );
     } else {
     }
 };
 
+/**
+ * Return an event stream promise using current authorization token 
+ * @param {String} name         Event name to request from the event stream
+ * @param {String} deviceId     Device ID to request from the event stream
+ * @return {Promise}
+ */
 particleui.getEventStream = function(name, deviceId) {
     var params = { };
     if (name && name.length) {
@@ -41,6 +56,14 @@ particleui.getEventStream = function(name, deviceId) {
     return this._particle.getEventStream(params); 
 };
 
+/**
+ * Login to Particle.io cloud. On success, particleui will save the returned authorization token 
+ * and begin monitoring device status for automatic widget updating
+ *
+ * @param {String} email        Email address to login with 
+ * @param {String} password     Password to login with
+ * @return {Promise}
+ */
 particleui.login = function(email, password) {
     var that = this;
     var promise = new Promise(function(resolve, reject) {
@@ -89,6 +112,12 @@ particleui.login = function(email, password) {
     return promise;
 };
 
+/**
+ * Logout of the Particle.io cloud, clear default device ID, authorization token, and stop
+ * updating widgets.
+ *
+ * @return {Promise}
+ */
 particleui.logout = function() {
     this._token = null;
     this._deviceId = null;
@@ -98,10 +127,22 @@ particleui.logout = function() {
     }
 }
 
+/**
+ * List devices on the currently signed in Particle.io account
+ *
+ * @return {Promise}
+ */
 particleui.listDevices = function() {
     return this._particle.listDevices({ auth: this._token });
 };
 
+/**
+ * Get a device variable using the current Particle.io authorization token
+ *
+ * @param {String} variable      Variable name
+ * @param {String} deviceId      Optional device ID. If no ID is specified, then the default ID will be used
+ * @return {Promise}
+ */
 particleui.getVariable = function(variable, deviceId) {
     if (!deviceId || !deviceId.length) {
         deviceId = this._deviceId;
@@ -109,14 +150,30 @@ particleui.getVariable = function(variable, deviceId) {
     return this._particle["getVariable"]({ deviceId : deviceId, name : variable, auth: this._token });
 };
 
-particleui.callFunction = function(name, data, deviceId) {
+/**
+ * Call a device function
+ *
+ * @param {String} name          Function name 
+ * @param {String} argument      Function argument string
+ * @param {String} deviceId      Optional device ID. If no ID is specified, then the default ID will be used
+ * @return {Promise}
+ */
+particleui.callFunction = function(name, argument, deviceId) {
     if (!deviceId || !deviceId.length) {
         deviceId = this._deviceId;
     }
     return this._particle["callFunction"]({ deviceId : deviceId, name: name, argument: argument, auth: this._token});
 };
 
-particleui.publishEvent = function(name, data, isPrivate) {
+/**
+ * Publish an event
+ *
+ * @param {String} name         Event name
+ * @param {String} data         Event data
+ * @param {bool} isPrivate      Public or private event. (Defaults to true)
+ * @return {Promise}
+ */
+particleui.publishEvent = function(name, data = null, isPrivate = true) {
     return this._particle["publishEvent"]({ name : name, data : data, isPrivate : isPrivate, auth: this._token});
 };
 
@@ -163,6 +220,12 @@ particleui._disable = function(element) {
     }
 }
 
+/**
+ * Refresh partcleui widgets. Only particleui widgets will be refreshed, based on
+ * device connection status
+ *
+ * @param {String} selector     A DOM selector of elements to refresh
+ */
 particleui.refresh = function(selector) {
     if (selector) {
         $selector = $(selector);
