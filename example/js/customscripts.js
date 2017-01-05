@@ -33,6 +33,7 @@ function doLogin() {
 }
 
 function doLogout() {
+    particleui.logout();
     $("#loginSplash").removeClass("hidden");
     $("#devicePage").addClass("hidden");
 }
@@ -43,11 +44,9 @@ function login() {
     particleui.login(email, password).then(
         function(result) {
             doLogin();
-            console.log("Logged in");
         },
         function(error) {
             doLogout();
-            console.log("Couldn't log in!");
         }
     );
 }
