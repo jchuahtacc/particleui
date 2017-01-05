@@ -14,7 +14,7 @@ Requires jQuery >= 2.
 
 ### class `particleui-variable`
 
-Sets the HTML (or input value) of this widget to the contents of a cloud variable.
+Sets the HTML (or input value) of this widget to the contents of a cloud variable. The widget will refresh itself upon connection status change, or fill the widget text with `---` if the variable or device is unavailable.
 
 Attributes:
 - `particleui-name`: name of the cloud variable
@@ -28,7 +28,7 @@ Example:
 
 ### class `particleui-function`
 
-Makes this widget clickable. Upon click, it will call a cloud function.
+Makes this widget clickable. Upon click, it will call a cloud function. The widget will automatically be disabled if the device is unavailable.
 
 Attributes:
 - `particleui-name`: name of the cloud function
@@ -38,7 +38,7 @@ Attributes:
 Example:
 
 ```
-<button class="particleui particleui-function" particleui-name="fun1" particleui-data="arguments" particleui-deviceid="0123456789">Click to call cloud function</button>
+<button class="particleui particleui-function" particleui-name="fun1" particleui-data="arguments" particleui-deviceid="0123456789" disabled>Click to call cloud function</button>
 ```
 
 ### class `particleui-publish`
