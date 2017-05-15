@@ -20,6 +20,9 @@ function deviceClick() {
 
     // Then make the device that was just clicked acive
     $(this).addClass("active");
+
+    // Get the selected device ID and then select it as the "default" device for particleui
+    particleui.selectDeviceId($(this).attr('particleui-deviceid'));
 }
 
 function doLogin() {
