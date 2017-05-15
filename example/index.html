@@ -48,10 +48,10 @@
                         </div>
                         <div class="panel-body">
                             <p>
-                                Variable var1: <span class="particleui particleui-variable" particleui-name="var1">---</span>
+                                Variable var1, auto updating in <a href="./js/customscript.js">./js/customscript</a>
                             </p>
                             <p>
-                                Variable var1 belonging to deviceId 300021000747353138383138: <span class="particleui particleui-variable" particleui-name="var1" particleui-deviceid="300021000747353138383138">---</span>
+                                <span class="particleui particleui-variable" particleui-name="var1">---</span>
                             </p>
                         </div>
                     </div>
@@ -63,13 +63,10 @@
                         </div>
                         <div class="panel-body">
                             <p>
-                                <button type="button" class="btn btn-primary particleui particleui-function" particleui-name="fun1" disabled>Run fun1()</button>
+                                Run device function fun1("hello"):
                             </p>
                             <p>
-                                <button type="button" class="btn btn-primary particleui particleui-function" particleui-name="fun1" particleui-data="hello" disabled>Run fun1("hello")</button>
-                            </p>
-                            <p>
-                                <button type="button" class="btn btn-primary particleui particleui-function" particleui-name="fun1" particleui-data="hello" particleui-deviceid="300021000747353138383138" disabled>Run fun1("hello") on deviceId 300021000747353138383138</button>
+                                <button type="button" class="btn btn-primary particleui particleui-function" particleui-name="fun1" particleui-data="hello" disabled>Call Function</button>
                             </p>
                         </div>
                     </div>
@@ -80,13 +77,10 @@
                     </div>
                     <div class="panel-body">
                         <p>
-                            <button type="button" class="btn btn-primary particleui particleui-publish" particleui-name="event1">Publish "event1"</button>
+                            Publish "event1" publicly, with data "eventdata"
                         </p>
                         <p>
-                            <button type="button" class="btn btn-primary particleui particleui-publish" particleui-name="event1" particleui-data="eventdata">Publish "event1" with data "eventdata"</button>
-                        </p>
-                        <p>
-                            <button type="button" class="btn btn-primary particleui particleui-publish" particleui-name="event1" particleui-isprivate="false">Publish "event1" publicly</button>
+                            <button type="button" class="btn btn-primary particleui particleui-publish" particleui-name="event1" particleui-data="eventdata" particleui-isprivate="true">Publish Event</button>
                         </p>
                     </div>
                 </div>
