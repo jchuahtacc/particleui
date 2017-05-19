@@ -198,12 +198,12 @@ particleui.getVariable = function(variable, deviceId = null) {
  * @return {Promise}
  */
 particleui.pollVariable = function(variable, interval, deviceId = null) {
-    var source1 = Rx.Observable.interval(1000)
+    var source = Rx.Observable.interval(interval)
     .flatMap(function(i){
-        return Rx.Observable.fromPromise(particleui.getVariable("var1"));
+        return Rx.Observable.fromPromise(particleui.getVariable(variable));
     });
 
-    return source1;
+    return source;
 }
 
 /**
