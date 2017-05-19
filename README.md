@@ -2,11 +2,12 @@
 
 ## Introduction
 
-jQuery widgets for interacting with Particle.io cloud variables, functions and events. 
+jQuery widgets for interacting with Particle.io cloud variables, functions and events.
 
 ## Requirements
 
 Requires jQuery >= 2.
+Requires RxJS
 
 ## Usage
 
@@ -88,6 +89,10 @@ Selects a default device ID that is used for any widget that does not have the `
 ### `particleui.getDevice(deviceId)`
 
 Uses the current authorization token to retrieve device status and caches any results in `particleui.devices`. Returns a `Promise`.
+
+### `particleui.pollVariable(variable, interval, deviceId = null)`
+
+Repeated poll a device variable at an interval using the current Particle.io authorization token.
 
 ### `particleui.getEventStream(name = null, deviceId = null)`
 

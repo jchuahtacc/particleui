@@ -62,7 +62,7 @@ particleui.getDevice = function(deviceId) {
 };
 
 /**
- * Return an event stream promise using current authorization token 
+ * Return an event stream promise using current authorization token
  * @param {String} name         Event name to request from the event stream
  * @param {String} deviceId     Device ID to request from the event stream
  * @return {Promise}
@@ -76,14 +76,14 @@ particleui.getEventStream = function(name = null, deviceId = null) {
         params.deviceId = deviceId;
     }
     params.auth = particle._token;
-    return this._particle.getEventStream(params); 
+    return this._particle.getEventStream(params);
 };
 
 /**
- * Login to Particle.io cloud. On success, particleui will save the returned authorization token 
+ * Login to Particle.io cloud. On success, particleui will save the returned authorization token
  * and begin monitoring device status for automatic widget updating
  *
- * @param {String} email        Email address to login with 
+ * @param {String} email        Email address to login with
  * @param {String} password     Password to login with
  * @return {Promise}
  */
@@ -190,9 +190,26 @@ particleui.getVariable = function(variable, deviceId = null) {
 };
 
 /**
+ * Repeated poll a device variable at an interval using the current Particle.io authorization token
+ *
+ * @param {String} variable      Variable name
+ * @param {Integer} interval     Polling interval in milliseconds
+ * @param {String} deviceId      Optional device ID. If no ID is specified, then the default ID will be used
+ * @return {Promise}
+ */
+particleui.pollVariable = function(variable, interval, deviceId = null) {
+    var source1 = Rx.Observable.interval(1000)
+    .flatMap(function(i){
+        return Rx.Observable.fromPromise(particleui.getVariable("var1"));
+    });
+
+    return source1;
+}
+
+/**
  * Call a device function
  *
- * @param {String} name          Function name 
+ * @param {String} name          Function name
  * @param {String} argument      Function argument string
  * @param {String} deviceId      Optional device ID. If no ID is specified, then the default ID will be used
  * @return {Promise}
@@ -252,7 +269,7 @@ particleui._enable = function(element) {
             particleui.getVariable(name, deviceId).then(
                 function(result) {
                     if (result.body.result) {
-                        particleui._fillText($that, result.body.result); 
+                        particleui._fillText($that, result.body.result);
                     } else {
                         particleui._fillText($that, "---");
                     }
