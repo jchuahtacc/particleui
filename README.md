@@ -7,6 +7,7 @@ jQuery widgets for interacting with Particle.io cloud variables, functions and e
 ## Requirements
 
 Requires jQuery >= 2.
+Requires RxJS
 
 ## Usage
 
